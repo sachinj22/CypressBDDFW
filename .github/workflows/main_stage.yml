@@ -1,0 +1,94 @@
+# # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+
+# # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+# name: fleetiot-aemsstage-cypress automation
+# # This workflow represents a set of basic End-to-End tests
+# on:
+#   schedule:
+#     - cron: "30 10 * * 1-5"
+
+#   pull_request:
+#   workflow_dispatch:
+#     inputs:
+#       tags:
+#         description: "Test Scenario Tags"
+#         default: "@Smoke"
+#       viewportHeight:
+#         description: "viewportheight"
+#         type: number
+#         default: 1920
+        
+#       viewportWidth:
+#         description: "viewportWidth"
+#         type: number
+#         default: 1080  
+        
+# jobs:
+#   run-automation:
+#     runs-on: ${{ vars.ubuntu }}
+#     strategy:
+#       matrix:
+#         node: [16]
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node }}
+#       - run: npm i
+      
+#       - name: Run Cypress Test
+#         uses: cypress-io/github-action@v5
+#         with:
+#           config-file: cypress.config_stage.js
+#           config: viewportHeight=${{ github.event.inputs.viewportHeight }},viewportWidth=${{ github.event.inputs.viewportWidth }}
+#           command: npx cypress run --config-file cypress.config_stage.js --browser chrome --record --key ${{ secrets.cypress_cloud_key_ui }} --headed --env client_id=${{ secrets.CLIENT_ID_STAGE }},client_secret=${{ secrets.CLIENT_SECRET_STAGE }},tags=${{ github.event.inputs.tags }},USERNAME=${{ secrets.RCM_USERNAME }},PASSWORD=${{ secrets.RCM_PWD_STAGE_NEW }},header_val=${{ secrets.HEADER_VALUE }},header_val2=${{ secrets.HEADER_VALUE2 }},oauthurl=${{secrets.OAUTH_STAGE}},delete_url=${{secrets.DELETE_WO_URL_STAGE}}
+#           browser: chrome
+#           headed: true
+          
+
+#       - run: node html-report.js
+#         if: always()
+
+#       - name: Deploy report page to Github Page
+#         uses: peaceiris/actions-gh-pages@v3
+#         if: always()
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           publish_dir: cypress/reports/html
+
+#       - uses: actions/upload-artifact@v4
+#         if: always()
+#         with:
+#           name: reports
+#           path: cypress/reports/json
+
+#       - uses: actions/upload-artifact@v4
+#         if: always()
+#         with:
+#           name: reports
+#           path: cypress/reports/html
+
+#       - uses: actions/upload-artifact@v4
+#         if: always()
+#         with:
+#           name: cypress-videos
+#           path: cypress/videos
+
+#       - uses: actions/upload-artifact@v4
+#         if: always()
+#         with:
+#           name: screenshots
+#           path: cypress/screenshots
+
+#         env:
+#           USERNAME: ${{ secrets.RCM_USERNAME }}
+#           PASSWORD: ${{ secrets.RCM_PWD_STAGE_NEW }}
+#           header_val: ${{ secrets.HEADER_VALUE }}
+#           header_val2: ${{ secrets.HEADER_VALUE2 }}
+#           client_id: ${{ secrets.CLIENT_ID }}
+#           client_secret: ${{ secrets.CLIENT_SECRET }}
